@@ -1,26 +1,65 @@
-const passport = require('passport');
 const express = require('express');
 const router = express.Router();
-const token = require('../../config/token');
+const jwt = require('jsonwebtoken');
+const key = require('../../config/key');
 
-// @route   GET /auth/facebook
-// @desc    For sending request to facebook 
-// @access  Private
-router.get('/facebook', 
-    passport.authenticate('facebook', { scope: ['email'], session: false })
-);
+// @route   POST /auth/token-fb
+// @desc    For creating JWT for client side using fb details from fb callback. 
+router.post('/token-fb', (req, res) => {
+        
+        const profile_id = req.body.id;
+        const profile_name = req.body.name;
+        const profile_email = req.body.email;
 
-// @route   GET /auth/facebook/callback
-// @desc    geting respond from fb data. 
-// @access  Private
-generateUserToken = (req, res) => {
-    token.generateAccessToken(req, res);
-}
+        if(!profile_id) {
+            return res.json('No Profile Id obtained.');
+        }
+        
+        User.findOne({ fbId: profile_id })
+            .then(user => {
+                if(user) {
+                    const payload = {
+                        id: user.id,
+                        name: user.name,
+                        info: user.info,
+                        imageURL: user.imageURL,
+                        imageID: user.imageID
+                    }
 
-router.get('/facebook/callback', 
-    passport.authenticate('facebook', { session: false }),
-    generateUserToken
-);
+                    // Sign JWT Token
+                    jwt.sign(payload, key.secretOrKey, {expiresIn: 5400}, (err, token) => {
+                        return res.json({
+                            success: true,
+                            token: 'Bearer ' + token
+                        })     
+                    })
+                }else {
+                    const newUser = new User({
+                        fbId: profile_id,
+                        name: profile_name,
+                        email: profile_email
+                    })
+                    newUser.save()
+                            .then(user => {
+                                const payload = {
+                                    id: user.id,
+                                    name: user.name,
+                                    info: user.info,
+                                    imageURL: user.imageURL,
+                                    imageID: user.imageID
+                                }
+            
+                                // Sign JWT Token
+                                jwt.sign(payload, key.secretOrKey, {expiresIn: 5400}, (err, token) => {
+                                    return res.json({
+                                        success: true,
+                                        token: 'Bearer ' + token
+                                    })     
+                                })
+                            })
+                }
+            })
+});
 
 
 module.exports = router;

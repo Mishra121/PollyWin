@@ -22,10 +22,10 @@ mongoose
     .catch(err => console.log(err));
 
 // Passport Middleware
-// app.use(passport.initialize());
+app.use(passport.initialize());
 //  Passport Config
-require('./config/fb-passport.js');
 require('./config/passport.js')(passport);
+
 
 
 //Routes

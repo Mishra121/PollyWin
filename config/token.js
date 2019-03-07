@@ -1,3 +1,5 @@
+// FILE NOT USED JUST TO REMEMBER JWT LOGIC
+
 const jwt = require('jsonwebtoken');
 const key = require('./key');
 
@@ -5,9 +7,10 @@ const key = require('./key');
 const User = require('../models/User');
 
 // Generate an Access Token for the given User ID
-function generateAccessToken(req, res) {
+function generateAccessToken(id) {
 
-    userId = req.user.id;
+    userId = id;
+    console.log(userId);
 
     User.findById(userId)
         .then(user => {
@@ -21,12 +24,13 @@ function generateAccessToken(req, res) {
 
             // Sign JWT Token
             jwt.sign(payload, key.secretOrKey, {expiresIn: 5400}, (err, token) => {
-                res.json({
-                success: true,
-                token: 'Bearer ' + token
+                return res.json({
+                    success: true,
+                    token: 'Bearer ' + token
+                })     
             })
-        })
-    }) 
+        }
+    ) 
 }
 
 module.exports = {
