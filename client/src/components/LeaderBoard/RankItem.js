@@ -5,12 +5,13 @@ export default class RankItem extends Component {
 
     const { rank } = this.props;
 
+
     return (
         <div className="gaadiex-list-item">
         {(rank.imageURL )? 
             (
                 <img className="gaadiex-list-item-img image-rounded" src={rank.imageURL} 
-                 style={{maxHeight: '80px', maxWidth: '80px'}}
+                 style={{maxHeight: '100px', maxWidth: '80px', marginBottom: '9px'}}
                 />
             ) : 
             (
@@ -21,10 +22,10 @@ export default class RankItem extends Component {
             )
         }    
         <div className="gaadiex-list-item-text">
-            <h3>{rank.name}</h3>
-            <p><strong>Score:</strong> {rank.score}</p>
+            <h4>{rank.name}</h4>
         </div>
-    </div>
+        <hr/>
+        </div>
     )
   }
 }

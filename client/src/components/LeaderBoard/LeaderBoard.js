@@ -32,7 +32,7 @@ class LeaderBoard extends Component {
                 <div className="col-md-6 m-auto">
                     <div className="card">
                         <div className="card-header text-center">
-                            <h4>Current Top Rankings...</h4>
+                            <h4>Current Top Profiles...</h4>
                         </div>
                         <br/>
                         <div className="gaadiex-list m-auto">
