@@ -13,14 +13,13 @@ router.get('/rankings', (req, res) => {
 
     User.find()
         .then(users => {
-            users.forEach(user => {
-                const score = (user.likes.length * 5) - (user.dislikes.length * 3);
-                user.score = score;
-            });
-            
-            var rankedUsers = users.sort((a, b) => {return b.score - a.score});
+            users.sort((a, b) => {
+                return ((b.likes.length * 5) - (b.dislikes.length * 3)) 
+                    - ((a.likes.length * 5) - (a.dislikes.length * 3));
+            })
 
-            res.json(rankedUsers);
+            // var rankedUsers = users.sort((a, b) => {return b.score - a.score});
+            res.json(users);
         })
         .catch((err) => console.log(err));
 });
