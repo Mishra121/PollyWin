@@ -14,7 +14,7 @@ import PrivateRoute from './components/PrivateRoute';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import Landing from './components/layout/Landing';
-import LeaderBoard from './components/layout/LeaderBoard';
+import LeaderBoard from './components/LeaderBoard/LeaderBoard';
 
 
 // Check for token

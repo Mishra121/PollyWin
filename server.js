@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const cors = require('cors');
 
 const users = require('./routes/api/users');
 const votes = require('./routes/api/votes');
@@ -12,12 +13,17 @@ const app = express();
 // Body Parser Middleware
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+// Cors 
+app.use(cors());
 
 // DB Config
 const db = require('./config/key').mongoURI;
 // Connect To Mlab(MongoDB)
 mongoose
-    .connect(db)
+    .connect(db, {
+        reconnectTries: Number.MAX_VALUE,
+        reconnectInterval: 1000
+    })
     .then(() => console.log('MongoDB Connected'))
     .catch(err => console.log(err));
 
