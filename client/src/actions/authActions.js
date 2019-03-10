@@ -2,7 +2,11 @@ import axios from 'axios';
 import setAuthToken from '../utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
 
-import { SET_CURRENT_USER, GET_ERRORS } from './types';
+import { SET_CURRENT_USER,
+    EDIT_BIO, 
+    GET_ERRORS,
+    PROFILE_LOADING
+} from './types';
 
 
 
@@ -45,4 +49,30 @@ export const logoutUser = () => dispatch => {
     setAuthToken(false);
     // Set current user to {} which will set isAuthenticated to false
     dispatch(setCurrentUser({}));
+}
+
+// Edit Bio
+export const editBio = newInfo => dispatch => {
+    axios.post('/api/users/edit/details', newInfo)
+        .then(res =>{
+                console.log(res.data);
+                dispatch({
+                    type: EDIT_BIO,
+                    payload: res.data
+                })
+            }    
+        )
+        .catch(err =>
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        )
+}
+
+// Set loading state
+export const setProfileLoading = () => {
+    return {
+        type: PROFILE_LOADING
+    }
 }

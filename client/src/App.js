@@ -15,6 +15,7 @@ import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import Landing from './components/layout/Landing';
 import LeaderBoard from './components/LeaderBoard/LeaderBoard';
+import Profile from './components/Profile/Profile'
 
 
 // Check for token
@@ -46,6 +47,13 @@ class App extends Component {
           <Navbar/>
           <Route exact path="/" component={Landing} />
           <Route exact path="/leaderboard" component={LeaderBoard} />
+          <Switch>
+            <PrivateRoute
+              exact
+              path="/profile"
+              component={Profile}
+            />
+          </Switch>
           <Footer/>
         </div>
         </Router>
