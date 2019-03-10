@@ -52,14 +52,28 @@ router.get('/current', passport.authenticate('jwt', {session: false}), (req, res
 // @desc    Updating details of user.
 // @access  Private
 router.post('/edit/details', passport.authenticate('jwt', {session: false}), (req, res) => {
-    const id = req.user.id;
-    const info = req.body.info;
+    
+    var query = { _id: req.user.id };
+    var update = { $set: req.body };
+    var options = { new: true};
 
-    User.findByIdAndUpdate(id, {info})
-        .then(user => {
-            return res.json({success: true});
-        })
-        .catch(err => console.log(err));
+    User.findOneAndUpdate(query, update, options, function(err, user){
+        
+        if(err) {
+            console.log(err);
+        }
+
+        const payload = {
+            id: user.id,
+            name: user.name,
+            info: user.info,
+            imageURL: user.imageURL,
+            imageID: user.imageID
+        }
+
+        return res.json(payload);
+    });
+    
 });
 
 // @route   POST api/users/edit/image
