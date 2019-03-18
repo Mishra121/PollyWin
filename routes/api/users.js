@@ -90,9 +90,17 @@ router.post('/edit/image', parser.single("image"), passport.authenticate('jwt', 
         cloudinary.uploader.destroy(imageIDtoDelete);
     }
 
-    User.findByIdAndUpdate(id, {imageURL, imageID})
+    User.findByIdAndUpdate(id, {imageURL, imageID}, { new: true})
         .then(user => {
-            return res.json({success: true});
+            const payload = {
+                id: user.id,
+                name: user.name,
+                info: user.info,
+                imageURL: user.imageURL,
+                imageID: user.imageID
+            }
+    
+            return res.json(payload);
         })
         .catch(err => console.error(err));
 });

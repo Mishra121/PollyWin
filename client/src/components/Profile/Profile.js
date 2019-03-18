@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import './Profile.css';
 import { connect } from 'react-redux';
 
-import { editBio } from '../../actions/authActions';
+import { findDOMNode } from 'react-dom'
+import { editBio, updateImg} from '../../actions/authActions';
 
 class Profile extends Component {
 
@@ -10,17 +11,20 @@ class Profile extends Component {
     super(props);
 
     this.state = {
+      imageValid: false,
       bio: '',
       errors: {}
     }
 
     this.onClick = this.onClick.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.handleImageUpload = this.handleImageUpload.bind(this);
+    this.onChangeImg = this.onChangeImg.bind(this);
   }
 
 
   onChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ bio: e.target.value });
   }  
 
   onClick() {
@@ -34,6 +38,31 @@ class Profile extends Component {
 
     this.props.editBio(newInfo);
     this.setState({ bio: ''});
+  }
+
+  handleImageUpload() {
+
+    if(!this.state.imageValid){
+      document.getElementById('image').click();
+    }
+    else if(this.state.imageValid){
+
+      const myFile = findDOMNode(this.refs.myFile).files[0];
+
+      console.log(myFile);
+
+      this.props.updateImg(myFile);
+    }
+  }
+
+  onChangeImg(e) {
+    
+    if (e.target.files[0]) {
+      this.setState( {imageValid: true} )
+    } else {
+      this.setState( {imageValid: false} )
+    } 
+
   }
 
   render() {
@@ -57,7 +86,10 @@ class Profile extends Component {
                             <img className="img-thumbnail rounded" src={user.imageURL} />
                             <br/>
                             <div className="overlay">
-                               <button><a href="#"><i className="fas fa-user-edit"></i> Edit</a></button>
+                              <label className="btn-upload">
+                                <input type="file" name="image" ref='myFile' id="image" onChange={this.onChangeImg} />
+                                <button onClick={this.handleImageUpload} className="btn"><i className="fas fa-user-edit"></i> Edit</button>
+                              </label>
                             </div>
                         </div>
                     </div>
@@ -77,7 +109,6 @@ class Profile extends Component {
                     <h3 className="text-primary">Bio</h3>
                     <button onClick={this.onClick} className="btn btn-sm btn-outline-dark">Edit Bio</button>
                     <button className="btn btn-sm btn-danger">Vote others</button>
-                    <button><a href="#"><i className="fas fa-user-edit"></i> Edit Image</a></button>
                     </div>
                     <hr/>
                     {
@@ -116,4 +147,4 @@ const mapStateProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateProps, { editBio })(Profile);
+export default connect(mapStateProps, { editBio, updateImg })(Profile);

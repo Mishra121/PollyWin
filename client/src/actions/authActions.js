@@ -70,6 +70,36 @@ export const editBio = newInfo => dispatch => {
         )
 }
 
+// Update Image
+export const updateImg = data => dispatch => {
+
+    const config = {
+        headers: {
+            'content-type': 'multipart/form-data'
+        }
+    }
+
+    const formData = new FormData();
+
+    formData.append('image', data);
+
+    axios.post('/api/users/edit/image', formData, config)
+        .then(res => {
+            console.log(res.data);
+            dispatch({
+                type: EDIT_BIO,
+                payload: res.data
+            })
+        })
+        .catch(err =>
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })    
+        )
+}
+
+
 // Set loading state
 export const setProfileLoading = () => {
     return {
