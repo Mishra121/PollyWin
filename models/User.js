@@ -21,18 +21,14 @@ const UserSchema = new Schema({
     imageID: {
         type: String
     },
-    likes: [
+    likes: [ 
         {
-            id: {
-                type: String
-            }
+            type: String
         }
     ],
     dislikes: [
         {
-            id: {
-                type: String
-            }
+            type: String
         }
     ]
 });

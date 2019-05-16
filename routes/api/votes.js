@@ -18,8 +18,13 @@ router.get('/rankings', (req, res) => {
                     - ((a.likes.length * 5) - (a.dislikes.length * 3));
             })
 
-            // var rankedUsers = users.sort((a, b) => {return b.score - a.score});
-            res.json(users);
+            if(users.length > 10){
+                users = users.slice(0,10);
+                res.json(users);
+            }else{
+                res.json(users);
+            }
+        
         })
         .catch((err) => console.log(err));
 });
@@ -31,10 +36,22 @@ router.get('/rankings', (req, res) => {
 // @access  Private
 router.get('/randUser', passport.authenticate('jwt', {session: false}), (req, res) => {
 
+    const user_id = req.user.id;
+
     User.find()
         .then((users) => {
+
             // Filtering on the basis of likes and dislikes
-            const  randUserArray = users.filter(user => (user.likes.length) == 0 || (user.dislikes.length) == 0 );
+
+            var randUserArray = users.filter((user) => {
+                if(user.likes.includes(user_id) || user.dislikes.includes(user_id)) {
+                    return false;
+                }else{
+                    return true;
+                }
+            })
+            
+            
             // Finding a random user
             const randUserDetails = randUserArray[Math.floor(Math.random() * randUserArray.length)];
 
@@ -51,36 +68,36 @@ router.get('/randUser', passport.authenticate('jwt', {session: false}), (req, re
 });
 
 
-// @route   POST api/votes/like/:id
+// @route   POST api/votes/like
 // @desc    For liking the User Given
 // @access  Private
-router.post('/like/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/like', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-    const like_id = req.params.id;
+    const like_id = req.body.id;
     const user_id = req.user.id;
 
     User.findById({_id :like_id})
         .then( user => {
             // Add user id to likes array
-            user.likes.unshift({ id: user_id})
+            user.likes.push(user_id);
 
             user.save().then(() => res.json({success: true}));
         })
         .catch(err => console.log(err));
 });
 
-// @route   POST api/votes/dislike/:id
+// @route   POST api/votes/dislike
 // @desc    For disliking the User Given
 // @access  Private
-router.post('/dislike/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/dislike', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-    const dislike_id = req.params.id;
+    const dislike_id = req.body.id;
     const user_id = req.user.id;
 
     User.findById({_id : dislike_id})
         .then( user => {
             // Add user id to dislikes array
-            user.dislikes.unshift({ id: user_id})
+            user.dislikes.push(user_id)
 
             user.save().then(() => res.json({success: true}));
         })

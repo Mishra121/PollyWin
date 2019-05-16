@@ -16,6 +16,7 @@ import Footer from './components/layout/Footer';
 import Landing from './components/layout/Landing';
 import LeaderBoard from './components/LeaderBoard/LeaderBoard';
 import Profile from './components/Profile/Profile'
+import Random from './components/Random/Random';
 
 
 // Check for token
@@ -52,6 +53,13 @@ class App extends Component {
               exact
               path="/profile"
               component={Profile}
+            />
+          </Switch>
+          <Switch>
+            <PrivateRoute
+              exact
+              path="/vote"
+              component={Random}
             />
           </Switch>
           <Footer/>
