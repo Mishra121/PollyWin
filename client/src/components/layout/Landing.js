@@ -52,6 +52,7 @@ class Landing extends Component {
                         appId="552016471966082"
                         fields="name,email"
                         callback={responseFacebook} 
+                        disableMobileRedirect={true}
                     />  
                 </div>
             </div>
